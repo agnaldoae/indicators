@@ -1,0 +1,15 @@
+{
+   "DEFAULT": {
+      "WINDOW": 11,
+      "HEAD_FILE": "./datasets/",
+      "DATE_START": "2001-11-01", 
+      "DATE_END":  "2018-01-31"
+   },
+   "STOCKS": {
+      "ALL": ["MMM", "AXP", "AAPL", "BA", "CAT", "CVX", "CSCO", 
+              "KO", "DWDP", "XOM", "GS", "HD", "IBM", "INTC", 
+              "JNJ", "JPM", "MCD", "MRK", "MSFT", "NKE", "PFE", 
+              "PG", "TRV", "UNH", "UTX", "VZ", "V", "WMT", 
+              "WBA", "DIS"]
+    }
+}

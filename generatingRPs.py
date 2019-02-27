@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import os
 import cv2 as cv
+import json
+import talib
 
 # Binarization
 def binarization(matrix, threshold):
@@ -36,26 +38,34 @@ def Mat2Image(matrix, fileName):
 
 
 if __name__ == "__main__":
-    lag = int(input("Enter Lag size: "))
-    folderPath = input("Enter folder path: ")
-    symbol = input("Enter stock symbol: ")
-    window = 5 #used to label time series
+    with open('config.json','r') as f:
+        config = json.load(f)
+
+    lag = config['DEFAULT']['LAG_RPS']
+    folderPath = "./labels"
+    window = config['DEFAULT']['WINDOW']
 
     os.makedirs("./rps/sell",exist_ok=True)
     os.makedirs("./rps/hold",exist_ok=True)
     os.makedirs("./rps/buy",exist_ok=True)
     
 
-    while symbol != '!':
+    for symbol in config['STOCKS']['ALL']:
         df = pd.read_csv (folderPath+'/'+symbol+'.csv', engine='python', sep=',')
         ts = df["Adj Close"].values.astype('float32')
+        ts_c = np.copy(ts)
+        ts_c[lag:] = talib.EMA(ts, timeperiod=lag)
         labels = df["Labels"].values
         indexs = df["Date"].values
 
-        for i in range(lag, len(ts)-window):
-            subseries = ts[i-lag:i]
-            rp = rplot(subseries)
-            Mat2Image(rp,"./rps/"+labels[i]+"/"+labels[i]+"."+indexs[i]+"."+symbol+".jpg" )
+        print("Stock: ",symbol)
+        for i in range(30):
+            print(index[i], ts[i], ts_c[i],labels[i])
+        break
+        #for i in range(lag, len(ts)-window):
+         #   subseries = ts_c[i-lag:i+1]
+          #  rp = rplot(subseries)
+          #  Mat2Image(rp,"./rps/"+labels[i]+"/"+symbol+"_"+indexs[i]+".png" )
 
-        symbol = input("Enter stock symbol or ! to stop: ")
+print("Finish :-)")
 
